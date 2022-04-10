@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atguigu.mybatis.mapper.UserMapper">
+<!--    MyBatis中可以面向接口操作数据，要保证两个一致-->
+<!--    mapper接口的全类名和映射文件的命名空间（namespace）保持一致-->
+<!--    mapper接口中方法的方法名和映射文件中编写SQL的标签的id属性保持一致-->
+
+
+
+    <!--int insertUser();-->
+    <insert id="insertUser">
+        insert into t_user values(4,'xiaoxi','666',23,'女','16489@qq.com')
+    </insert>
+
+    <delete id="deleteUser">
+        delete from t_user where id = 2
+    </delete>
+    
+    <update id="updateUser">
+        update t_user set id = 2 where age = 23
+    </update>
+
+    <select id="getUserById" resultType="com.atguigu.mybatis.pojo.User">
+        select * from t_user where id = 3
+    </select>
+
+    <select id="getUserList" resultType="com.atguigu.mybatis.pojo.User">
+        select * from t_user
+    </select>
+
+    <select id="getUserByUsername" resultType="User">
+        select * from t_user where name = '${username}'
+    </select>
+
+    <!--User checkLogin(String username,String password);-->
+    <select id="checkLogin" resultType="User">
+        select * from t_user where name = #{arg0} and password = #{arg1}
+    </select>
+
+    <select id="checkLoginByMap" resultType="User">
+        select * from t_user where name = #{username} and password = #{password}
+    </select>
+
+    <insert id="insertUser2">
+        insert into t_user values(null,#{name},#{password},#{age},#{sex},#{email})
+    </insert>
+
+    <select id="checkLoginByParam" resultType="User">
+        select * from t_user where name = #{username} and password = #{password}
+    </select>
+
+    <select id="getUserById2" resultType="User">
+        select * from t_user where id = #{id}
+    </select>
+
+    <select id="getUserList2" resultType="User">
+        select * from t_user
+    </select>
+
+    <select id="getCount" resultType="int">
+        select count(id) from t_user
+    </select>
+
+    <select id="getUserToMap" resultType="map">
+        select * from t_user where id = #{id}
+    </select>
+
+    <select id="getUserByLike" resultType="User">
+        select * from t_user where name like "%"#{username}"%"
+    </select>
+
+    <delete id="batchDelete">
+        delete from t_user where id in (${ids})
+    </delete>
+
+    <!--List<User> getUserByTable(@Param("tableName") String tableName);-->
+    <select id="getUserByTableName" resultType="User">
+        select * from ${tableName}
+    </select>
+
+    <insert id="insertUser3" useGeneratedKeys="true" keyProperty="id">
+        insert into t_user values (null,#{name},#{password},#{age},#{sex},#{email})
+    </insert>
+
+    <select id="getAllEmp" resultType="Emp">
+        select eid,emp_name empName,age,sex,email from t_emp
+    </select>
+
+    <resultMap id="empResultMap" type="Emp">
+        <id property="eid" column="eid"></id>
+        <result property="empName" column="emp_name"></result>
+        <result property="age" column="age"></result>
+        <result property="sex" column="sex"></result>
+        <result property="email" column="email"></result>
+    </resultMap>
+    <select id="getAllEmp2" resultMap="empResultMap">
+        select * from t_emp
+    </select>
+
+    <resultMap id="empAndDeptByStepResultMap" type="Emp">
+        <id property="eid" column="eid"></id>
+        <result property="empName" column="emp_name"></result>
+        <result property="age" column="age"></result>
+        <result property="sex" column="sex"></result>
+        <result property="email" column="email"></result>
+        <association property="dept"
+                     select="com.atguigu.mybatis.mapper.DeptMapper.getEmpAndDeptByStepTwo"
+                     column="did"></association>
+    </resultMap>
+    <!--Emp getEmpAndDeptByStepOne(@Param("eid") Integer eid);-->
+    <select id="getEmpAndDeptByStepOne" resultMap="empAndDeptByStepResultMap">
+        select * from t_emp where eid = #{eid}
+    </select>
+
+
+
+
+
+</mapper>
